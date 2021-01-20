@@ -16,9 +16,9 @@ I have sucessfully tested this with a CloudTrail bucket containing 0.5 million e
 # 1. Set up Service policy
 aws iam create-service-linked-role --aws-service-name es.amazonaws.com
 # 2. Create EMR Cluster
-I had a estimated 0.5 million ElasticSeaqrch Events to process so I created a Clusyer using emr-5.31.0, 1 admin node and 6 code nodes.  To keep it simple, just use a public one to get yourself started.
+I had a estimated 0.5 million ElasticSearch Events to process so I created a Cluster using emr-5.31.0, 1 admin node and 6 code nodes.  To keep it simple, just use a public one to get yourself started.
 # 3. Create Elasticearch Cluster
-I created an E;asticSearch cluster with 6 data nodes and 3 admin nodes.  This ensurs you have plenty of disk space to play with while you index.
+I created an ElasticSearch cluster with 6 data nodes and 3 admin nodes.  This ensures you have plenty of disk space to play with while you index.
 # 4. Run Jupyter notebook in Jupyterlab
 Start the Jupyter Notebook in Jupyterlab.  The notebook is contained in the root of this project.  You will need to amend the following Sections:
 ```bash
