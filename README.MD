@@ -21,4 +21,8 @@ I had a estimated 0.5 million ElasticSeaqrch Events to process so I created a Cl
 I created an E;asticSearch cluster with 6 data nodes and 3 admin nodes.  This ensurs you have plenty of disk space to play with while you index.
 # 4. Run Jupyter notebook in Jupyterlab
 Start the Jupyter Notebook in Jupyterlab.  The notebook is contained in the root of this project.  You will need to amend the following Sections:
+<<<<<<< HEAD
 cloudTrailLo
+=======
+cloudTrailLo
+>>>>>>> 0dbe6548748614ba6f21f628aad9a69e95134761
