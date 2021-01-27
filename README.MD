@@ -3,7 +3,7 @@ As an AWS Operator I should be able to load all of my CloudTrail archive logs in
 
 # Summary
 
-This project is a tool for importing CloudTrail Events in bulk from S3 sources and storing them in ElasticSearch for easy visual querying.  It does not support streaming so it just lods whatever is in the CloudTrail archive bucket at the time, however with a bit of PySpark knowlege you can easily change the notebook to be a streaming service.
+This project is a tool for importing CloudTrail Events in bulk from S3 sources and storing them in ElasticSearch for easy visual querying.  It does not support streaming so it just loads whatever is in the CloudTrail archive bucket at the time, however with a bit of PySpark knowlege you can easily change the notebook to be a streaming service.
 
 Minimal transformation is done on the CLoudTrail event before it is saved to Elastic Search.  From there its just a matter of setting up your searches and doing adhoc querying of the data.
 
@@ -16,20 +16,17 @@ I have sucessfully tested this with a CloudTrail bucket containing 0.5 million e
 # 1. Set up Service policy
 aws iam create-service-linked-role --aws-service-name es.amazonaws.com
 # 2. Create EMR Cluster
-I had a estimated 0.5 million ElasticSearch Events to process so I created a Cluster using emr-5.31.0, 1 admin node and 6 code nodes.  To keep it simple, just use a public one to get yourself started.
+I had a estimated 1.7 million CloudTrail Events to process so I created a Cluster using emr-5.31.0, 1 admin node and 6 code nodes.  Reading the data into a table takes approximately 20-30 seconds when using the schema in the notebook.  
 # 3. Create Elasticearch Cluster
-I created an ElasticSearch cluster with 6 data nodes and 3 admin nodes.  This ensures you have plenty of disk space to play with while you index.
+I created an ElasticSearch cluster with 6 data nodes and 3 admin nodes.  This ensures you have plenty of disk space to play with while you index.  1.7 million CloudTrail events used up 5.5 GB of disk in a single index and takes about 12 minutes to index using the elasticsearch-hadoop maven package. 
+The ElasticSearch clusyter must be created with a public endpoint and not using the VPC.  This is because the EMR cluster will need to be able to access the ElasticSearch endpoint directly in the VPC and thats not possible because you can't set up the EMR cluster in the ElasticSearch security group.  What you could look at is using an EMR VPC endpoint to try to get aroudn this.  
+You also need to set up the cluster to use the intenal user database.  The reason for this is because the elasticsearch-hadoop java class only supports http basic authentication so Cognito and IAM won't work.
+# 4. Parameter Store
+The parameters for accessing the ElasticSearch clusyer from EMR are put in parameter store.  Parameters you need to define for the notebook are listed here:
+/sdl-es/cloudtrailPath - s3 url for the CloudTrail log bucket
+/sdl-es/esEndpoint - The ElasticSearch Endpoint
+/sdl-es/esIndex - The index name
+/sdl-es/master/password - SecureString - ElasticSearch user password
+/sdl-es/master/user - String - ElasticSearch user name
 # 4. Run Jupyter notebook in Jupyterlab
-Start the Jupyter Notebook in Jupyterlab.  The notebook is contained in the root of this project.  You will need to amend the following Sections:
-```bash
-cloudTrailLogsPath = "s3n://<YOURBUCKETNAMEHERE>/AWSLogs/*/CloudTrail/*/*/*/*/"
-```
-```bash
-name = "YOUR USERNAME HERE"
-password = "YOUR PASSWORD HERE"
-index = "sdl/cloudtrail"
-```
-```bash
-        "es.nodes" : "<YOURESCLUSTER>.<REGION>.es.amazonaws.com",
-        "es.port" : "443",
-```
+Start the Jupyter Notebook in Jupyterlab.  The notebook is contained in the root of this project.  The Notebook imports the elasticsearch-hadoop from maven repo and deploys the boto3 libraries to allow access to AWS Systems manager parameter store.  Code and notes on code are in the notebook itself.
