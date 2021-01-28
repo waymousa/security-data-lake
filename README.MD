@@ -41,7 +41,26 @@ The parameters for accessing the ElasticSearch clusyer from EMR are put in param
 # 5. Update the EMR_EC2_Default role
 You need to allow the EMR nodes to access parameter store in order to run the job.  Create an inline policy and post the following json into it.  Amend the account number.
 bash'''
-
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Action": [
+                "ssm:GetParametersByPath",
+                "ssm:GetParameter"
+            ],
+            "Resource": "arn:aws:ssm:us-east-1:your-account-number:parameter/sdl-es*"
+        },
+        {
+            "Sid": "VisualEditor2",
+            "Effect": "Allow",
+            "Action": "ssm:DescribeParameters",
+            "Resource": "*"
+        }
+    ]
+}
 '''
 # 6. Run Jupyter notebook in Jupyterlab
 Start the Jupyter Notebook in Jupyterlab.  The notebook is contained in the root of this project.  The Notebook imports the elasticsearch-hadoop from maven repo and deploys the boto3 libraries to allow access to AWS Systems manager parameter store.  Code and notes on code are in the notebook itself.
