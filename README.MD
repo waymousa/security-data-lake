@@ -33,13 +33,13 @@ PUT sdl/_settings
 You can use the same ElasticSearch cluster for all the accounts you want to load data from.
 # 4. Parameter Store
 The parameters for accessing the ElasticSearch clusyer from EMR are put in parameter store.  Parameters you need to define for the notebook are listed here:
-|SSM Parameter Name|Type|Description|Example|
+|SM Parameter Name|Type|Description|Example|
 |---|---|---|---|
-|/sdl-es/cloudtrailPath||s3 url for the CloudTrail log bucket||
-|/sdl-es/esEndpoint||The ElasticSearch Endpoint||
-|/sdl-es/esIndex||The index name||
-|/sdl-es/master/password|SecureString|ElasticSearch user password||
-|/sdl-es/master/user|String|ElasticSearch user name||
+|/sdl-es/cloudtrailPath|String|s3 url for the CloudTrail log bucket|s3n://BUCKET_NAME_HERE/AWSLogs/*/CloudTrail/*/*/*/*/|
+|/sdl-es/esEndpoint|String|The ElasticSearch Endpoint|search-sdl-es-prod-kq6eafuoes7ynvzroebkpx6zq4.us-east-1.es.amazonaws.com|
+|/sdl-es/esIndex|String|The index name|sdl-{@timestamp|YYYY.MM}/cloudtrail|
+|/sdl-es/master/password|SecureString|ElasticSearch user password|YOUR_ELASTICSEARCH_USER_PASSWORD|
+|/sdl-es/master/user|String|ElasticSearch user name|YOUR_ELASTICSEARCH_USER_NAME|
 # 5. Update the EMR_EC2_Default role
 You need to allow the EMR nodes to access parameter store in order to run the job.  Create an inline policy and post the following json into it.  Amend the account number.
 ```bash
