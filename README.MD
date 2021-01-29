@@ -35,7 +35,7 @@ You can use the same ElasticSearch cluster for all the accounts you want to load
 The parameters for accessing the ElasticSearch clusyer from EMR are put in parameter store.  Parameters you need to define for the notebook are listed here:
 |SM Parameter Name|Type|Description|Example|
 |---|---|---|---|
-|/sdl-es/cloudtrailPath|String|s3 url for the CloudTrail log bucket|s3n://BUCKET_NAME_HERE/AWSLogs/*/CloudTrail/*/*/*/*/|
+|/sdl-es/cloudtrailPath|String|s3 url for the CloudTrail log bucket|s3n://BUCKET_NAME_HERE/AWSLogs/\*/CloudTrail/\*/\*/\*/\*/|
 |/sdl-es/esEndpoint|String|The ElasticSearch Endpoint|search-sdl-es-prod-kq6eafuoes7ynvzroebkpx6zq4.us-east-1.es.amazonaws.com|
 |/sdl-es/esIndex|String|The index name|sdl-{@timestamp|YYYY.MM}/cloudtrail|
 |/sdl-es/master/password|SecureString|ElasticSearch user password|YOUR_ELASTICSEARCH_USER_PASSWORD|
