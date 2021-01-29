@@ -20,6 +20,8 @@ aws iam create-service-linked-role --aws-service-name es.amazonaws.com
 # 2. Create EMR Cluster
 I had a estimated 1.7 million CloudTrail Events to process so I created a Cluster using emr-5.31.0, 1 admin node and 6 code nodes.  Reading the data into a table takes approximately 20-30 seconds when using the schema in the notebook.  
 You can create the same cluster in each account that is the source for your Cloudtrail Data if you need a multi-account ingestion.
+
+I have also has sucess with creating the notebook first and the letting it create the EMR cluster for you usign autoscaling.  I saw this work when I had 4 years of CloudTrail logs to ingest.  Set the disk on each node to 20GB to be on the safe side.
 # 3. Create Elasticearch Cluster
 I created an ElasticSearch cluster with 6 data nodes and 3 admin nodes.  This ensures you have plenty of disk space to play with while you index.  1.7 million CloudTrail events used up 5.5 GB of disk in a single index and takes about 12 minutes to index using the elasticsearch-hadoop maven package. 
 The ElasticSearch clusyter must be created with a public endpoint and not using the VPC.  This is because the EMR cluster will need to be able to access the ElasticSearch endpoint directly in the VPC and thats not possible because you can't set up the EMR cluster in the ElasticSearch security group.  What you could look at is using an EMR VPC endpoint to try to get aroudn this.  
@@ -67,3 +69,7 @@ You need to allow the EMR nodes to access parameter store in order to run the jo
 ```
 # 6. Run Jupyter notebook in Jupyterlab
 Start the Jupyter Notebook in Jupyterlab.  The notebook is contained in the root of this project.  The Notebook imports the elasticsearch-hadoop from maven repo and deploys the boto3 libraries to allow access to AWS Systems manager parameter store.  Code and notes on code are in the notebook itself.
+
+You should see the indexes being created in ElasticSearch and filling up.  The indexes are create for each month using the sdl-YYYY.MM/cloudtrail pattern.  
+
+500,000 documents seems to be about 1.5GB with a default 5 primary and 1 replica shard.
