@@ -33,14 +33,15 @@ PUT sdl/_settings
 You can use the same ElasticSearch cluster for all the accounts you want to load data from.
 # 4. Parameter Store
 The parameters for accessing the ElasticSearch clusyer from EMR are put in parameter store.  Parameters you need to define for the notebook are listed here:
-/sdl-es/cloudtrailPath - s3 url for the CloudTrail log bucket
-/sdl-es/esEndpoint - The ElasticSearch Endpoint
-/sdl-es/esIndex - The index name
-/sdl-es/master/password - SecureString - ElasticSearch user password
-/sdl-es/master/user - String - ElasticSearch user name
+|SSM Parameter Name|Type|Description|Example|
+|/sdl-es/cloudtrailPath||s3 url for the CloudTrail log bucket||
+|/sdl-es/esEndpoint||The ElasticSearch Endpoint||
+|/sdl-es/esIndex||The index name||
+|/sdl-es/master/password|SecureString|ElasticSearch user password||
+|/sdl-es/master/user|String|ElasticSearch user name||
 # 5. Update the EMR_EC2_Default role
 You need to allow the EMR nodes to access parameter store in order to run the job.  Create an inline policy and post the following json into it.  Amend the account number.
-bash'''
+```bash
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -61,6 +62,6 @@ bash'''
         }
     ]
 }
-'''
+```
 # 6. Run Jupyter notebook in Jupyterlab
 Start the Jupyter Notebook in Jupyterlab.  The notebook is contained in the root of this project.  The Notebook imports the elasticsearch-hadoop from maven repo and deploys the boto3 libraries to allow access to AWS Systems manager parameter store.  Code and notes on code are in the notebook itself.
