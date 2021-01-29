@@ -14,7 +14,9 @@ I have sucessfully tested this with a CloudTrail bucket containing 0.5 million e
 # Steps
 
 # 1. Set up Service policy
+```bash
 aws iam create-service-linked-role --aws-service-name es.amazonaws.com
+```
 # 2. Create EMR Cluster
 I had a estimated 1.7 million CloudTrail Events to process so I created a Cluster using emr-5.31.0, 1 admin node and 6 code nodes.  Reading the data into a table takes approximately 20-30 seconds when using the schema in the notebook.  
 You can create the same cluster in each account that is the source for your Cloudtrail Data if you need a multi-account ingestion.
