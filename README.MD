@@ -33,11 +33,7 @@ You also need to set up the cluster to use the intenal user database.  The reaso
 
 You might find that you get the odd index that will cause a failure because the maximum feilds limit of 1000 is reached.  Set this to 2000 like so:
 ```bash
-PUT sdl*/_settings
-{
-  "index.mapping.total_fields.limit": 2000
-}
-PUT _index_template/sdl
+PUT _template/sdl_1
 {
   "index_patterns": ["sdl*"],
   "template": {
