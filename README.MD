@@ -34,6 +34,7 @@ You can use the same ElasticSearch cluster for all the accounts you want to load
 # 4. Parameter Store
 The parameters for accessing the ElasticSearch clusyer from EMR are put in parameter store.  Parameters you need to define for the notebook are listed here:
 |SSM Parameter Name|Type|Description|Example|
+|---|---|---|---|
 |/sdl-es/cloudtrailPath||s3 url for the CloudTrail log bucket||
 |/sdl-es/esEndpoint||The ElasticSearch Endpoint||
 |/sdl-es/esIndex||The index name||
