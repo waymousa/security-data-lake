@@ -37,6 +37,15 @@ PUT sdl*/_settings
 {
   "index.mapping.total_fields.limit": 2000
 }
+PUT _index_template/sdl
+{
+  "index_patterns": ["sdl*"],
+  "template": {
+    "settings": {
+      "index.mapping.total_fields.limit": 2000
+    }
+  }
+}
 ```
 You can use the same ElasticSearch cluster for all the accounts you want to load data from.
 # 4. Parameter Store
