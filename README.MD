@@ -38,7 +38,8 @@ PUT _template/sdl_1
   "index_patterns": ["sdl*"],
   "template": {
     "settings": {
-      "index.mapping.total_fields.limit": 2000
+      "index.mapping.total_fields.limit": 2000,
+      "number_of_shards": 1
     }
   }
 }
