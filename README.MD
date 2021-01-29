@@ -22,14 +22,13 @@ You can create the same cluster in each account that is the source for your Clou
 I created an ElasticSearch cluster with 6 data nodes and 3 admin nodes.  This ensures you have plenty of disk space to play with while you index.  1.7 million CloudTrail events used up 5.5 GB of disk in a single index and takes about 12 minutes to index using the elasticsearch-hadoop maven package. 
 The ElasticSearch clusyter must be created with a public endpoint and not using the VPC.  This is because the EMR cluster will need to be able to access the ElasticSearch endpoint directly in the VPC and thats not possible because you can't set up the EMR cluster in the ElasticSearch security group.  What you could look at is using an EMR VPC endpoint to try to get aroudn this.  
 You also need to set up the cluster to use the intenal user database.  The reason for this is because the elasticsearch-hadoop java class only supports http basic authentication so Cognito and IAM won't work.
-Create the index before you run the notebook and set the fileds maximum to 2000
-bash'''
-PUT sdl
-PUT sdl/_settings
+You might find that you get the odd index that will cause a failure because the maximum fileds limit of 1000 is reached.  Set this to 2000 like so:
+```bash
+PUT sdl*/_settings
 {
   "index.mapping.total_fields.limit": 2000
 }
-'''
+```
 You can use the same ElasticSearch cluster for all the accounts you want to load data from.
 # 4. Parameter Store
 The parameters for accessing the ElasticSearch clusyer from EMR are put in parameter store.  Parameters you need to define for the notebook are listed here:
