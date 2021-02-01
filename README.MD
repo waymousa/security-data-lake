@@ -23,11 +23,11 @@ You can create the same cluster in each account that is the source for your Clou
 
 I have also has sucess with creating the notebook first and the letting it create the EMR cluster for you usign autoscaling.  I saw this work when I had 4 years of CloudTrail logs to ingest.  Set the disk on each node to 20GB to be on the safe side.
 # 3. Create Elasticearch Cluster
-I created an ElasticSearch cluster with 12 data nodes and 3 admin nodes as well as 20GB of disk each.  This ensures you have plenty of disk space, 240GB, to play with while you index.  
+I created an ElasticSearch cluster with 12 data nodes and 3 admin nodes.  I use i3 2XL this ensures plenty of disk space and fast IO to increase indexing throghput.
 
-In terms of space requirements it varies between indexes, but I have seen from 500,000 documents take up 1.5GB of disk to 1,000,000 use 3.7GB of disk.
+I use a single shard for each index because the data is indexed by month and it rarely gets about 1.6 GB for 900,000 CloudTrail entries.  I am only usually indexing for a single AWS account, but with a max shard size of 30GB you can quickly estimate how much space you will need in your cluster.
 
-The ElasticSearch clusyter must be created with a public endpoint and not using the VPC.  This is because the EMR cluster will need to be able to access the ElasticSearch endpoint directly in the VPC and thats not possible because you can't set up the EMR cluster in the ElasticSearch security group.  What you could look at is using an EMR VPC endpoint to try to get around this.  
+The ElasticSearch cluster must be created with a public endpoint and not using the VPC.  This is because the EMR cluster will need to be able to access the ElasticSearch endpoint directly in the VPC and thats not possible because you can't set up the EMR cluster in the ElasticSearch security group.  What you could look at is using an EMR VPC endpoint to try to get around this.  
 
 You also need to set up the cluster to use the intenal user database.  The reason for this is because the elasticsearch-hadoop java class only supports http basic authentication so Cognito and IAM won't work.
 
@@ -35,12 +35,12 @@ You might find that you get the odd index that will cause a failure because the 
 ```bash
 PUT _template/sdl_1
 {
-  "index_patterns": ["sdl*"],
-  "template": {
-    "settings": {
-      "index.mapping.total_fields.limit": 2000,
+  "template": "sdl*",
+  "settings": {
+    "index": {
+      "mapping.total_fields.limit": 2000,
       "number_of_shards": 1,
-      "number_of_replicas": 1
+      "number_of_replicas": 0
     }
   }
 }
